@@ -42,7 +42,7 @@ CREATE TABLE `jobing` (
   `lid` int(11) NOT NULL COMMENT 'list Id',
   `uid` char(20) NOT NULL DEFAULT '16to' COMMENT 'user Id',
   `title` char(200) NOT NULL DEFAULT '',
-  `name` char(20) DEFAULT '',
+  `name` char(50) DEFAULT '',
   `email` char(50) DEFAULT '',
   `phone` char(20) DEFAULT '',
   `espace` char(20) DEFAULT '',
@@ -65,6 +65,35 @@ CREATE TABLE `sendlog` (
   `espace` char(20) DEFAULT '',
   `title` char(200) NOT NULL DEFAULT '',
   `result` char(200) DEFAULT '',
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(50) DEFAULT '',
+  `avatar` text DEFAULT '/public/avatar.png',
+  `addtime` bigint(20) DEFAULT '0',
+  `email` char(50) DEFAULT '',
+  `phone` char(20) DEFAULT '',
+  `espace` char(20) DEFAULT '',
+  `title` char(200) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE `loginlog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account` char(20) NOT NULL,
+  `addtime` bigint(20) DEFAULT '0',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-手机登录;1-第三方登录',
+  `loginip` varchar(15) NOT NULL DEFAULT '127.0.0.1',
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE `vcode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `vcode` init(10) NOT NULL,
+  `phone` char(20) NOT NULL,
+  `addtime` bigint(20) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
 
