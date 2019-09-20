@@ -1,0 +1,46 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "luban-portal-server",
+  "main": "app.js",
+  "scripts": {
+    "start": "umi dev",
+    "build": "umi build"
+  },
+  "author": "16to",
+  "license": "MIT",
+  "dependencies": {
+    "antd": "^3.19.5",
+    "body-parse": "^0.1.0",
+    "body-parser": "^1.19.0",
+    "cron": "^1.7.1",
+    "dva": "^2.4.1",
+    "express": "^4.16.4",
+    "http": "0.0.0",
+    "http-proxy-middleware": "^0.19.1",
+    "js-cookie": "^2.2.0",
+    "js-sha1": "^0.6.0",
+    "moment": "^2.24.0",
+    "mysql": "^2.17.1",
+    "path": "^0.12.7",
+    "qs": "^6.7.0",
+    "react": "^16.8.6",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.12.0",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-compat": "^2.6.2",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-markdown": "^1.0.0-beta.6",
+    "eslint-plugin-react": "^7.11.1",
+    "mockjs": "^1.0.1-beta3",
+    "umi": "^2.6.17",
+    "umi-plugin-react": "^1.7.6"
+  }
+}
