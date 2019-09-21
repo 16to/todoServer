@@ -1,5 +1,5 @@
 // 引入所有的请求接口
-import { sendCaptchaApi } from '@/services/todo';
+import { sendCaptchaApi,sendLoginApi } from '@/services/todo';
 
 export default {
   // 空间名称
@@ -15,6 +15,15 @@ export default {
     // 发送验证码
     *sendCaptcha({data}, { call }) {
       const response = yield call(sendCaptchaApi,data);
+      return response;
+    },
+    // 登录
+    *login({data}, { call,put }) {
+      const response = yield call(sendLoginApi,data);
+      yield put({
+        type: 'queryInfo',
+        payload: response,
+      });
       return response;
     },
   },

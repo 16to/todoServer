@@ -94,3 +94,13 @@ export async function sendCaptchaApi(data){
     },
   });
 }
+
+export async function sendLoginApi(data){
+  const { ...restParams } = data;
+  return request(`/api/login`, {
+    method: 'POST',
+    body: {
+      ...restParams,
+    },
+  });
+}

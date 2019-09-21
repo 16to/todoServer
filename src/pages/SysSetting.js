@@ -1,8 +1,8 @@
 // 引入react和PureComponent
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import Cookies from 'js-cookie';
 import { Alert,List,Divider,Upload,Button,Icon,message, Select,Slider } from 'antd';
-import {ssoLogout} from '@/utils/SSO';
 
 import styles from './Todo.less';
 
@@ -69,7 +69,8 @@ class Demo extends PureComponent {
 
   // 退出登录
   exit=()=>{
-    ssoLogout();
+    Cookies.remove("uid");
+    window.location.href="/login";
   }
 
   // 设置页面

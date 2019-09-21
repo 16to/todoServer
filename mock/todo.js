@@ -187,6 +187,10 @@ function sendCaptcha(req,res){
   return res.json({});
 }
 
+function login(req,res){
+  return res.json({"uid":req.body.mobile});
+}
+
 export default {
   // 获取todo list
   'GET /api/todo':(req,res)=>getTodo(req,res),
@@ -202,4 +206,6 @@ export default {
   'PUT /api/setting/:uid':(req,res)=>updateTodoSetting(req,res),
   // 发送验证码
   'POST /api/sendCaptcha':(req,res)=>sendCaptcha(req,res),
+   // 登录
+  'POST /api/login':(req,res)=>login(req,res),
 };

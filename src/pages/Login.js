@@ -1,6 +1,8 @@
 // 引入react和PureComponent
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import Cookies from 'js-cookie';
+import router from 'umi/router';
 import { Button, Input, Row, Col, Form, Icon } from 'antd';
 
 import styles from './Login.less';
@@ -36,7 +38,7 @@ class Login extends PureComponent {
       {},
       (err, values) => {
         if (err) {
-          this.mobile.focus();
+          this.mobileInput.focus();
           return;
         }
         dispatch({
@@ -46,7 +48,7 @@ class Login extends PureComponent {
           }
         });
         this.runGetCaptchaCountDown();
-        this.vcode.focus();
+        this.vcodeInput.focus();
       }
     );
 
@@ -57,15 +59,26 @@ class Login extends PureComponent {
     if (form) {
       form.validateFields((err, values) => {
         if (err) {
-          console.log(err);
+          if(err.mobile){
+            this.mobileInput.focus();
+            return;
+          }
+          if(err.vcode){
+            this.vcodeInput.focus();
+            return;
+          }
           return;
         }
-        console.log(values);
         dispatch({
           type: 'login/login',
           data: {
             'mobile': values.mobile,
             'vcode': values.vcode
+          }
+        }).then((res)=>{
+          if(res){
+            Cookies.set("uid", values.mobile);
+            router.push("/");
           }
         })
       });
@@ -113,7 +126,7 @@ class Login extends PureComponent {
                   validateTrigger: 'onBlur',
 
                 }
-                )(<Input ref={(c) => { this.mobile = c; }} autoFocus onPressEnter={this.handleSubmit} placeholder="手机号" size="large" prefix={<Icon type="mobile" className={styles.prefixIcon} />} />)}
+                )(<Input ref={(c) => { this.mobileInput = c; }} autoFocus onPressEnter={this.handleSubmit} placeholder="手机号" size="large" prefix={<Icon type="mobile" className={styles.prefixIcon} />} />)}
               </Form.Item>
               <Form.Item>
                 <Row gutter={8}>
@@ -123,7 +136,7 @@ class Login extends PureComponent {
                         required: true,
                         message: "请输入验证码！",
                       }]
-                    })(<Input ref={(c) => { this.vcode = c; }} onPressEnter={this.handleSubmit} placeholder='验证码' size="large" prefix={<Icon type="mail" className={styles.prefixIcon} />} />)}
+                    })(<Input ref={(c) => { this.vcodeInput = c; }} onPressEnter={this.handleSubmit} placeholder='验证码' size="large" prefix={<Icon type="mail" className={styles.prefixIcon} />} />)}
                   </Col>
                   <Col span={8}>
                     <Button

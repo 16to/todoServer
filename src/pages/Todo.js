@@ -2,11 +2,8 @@
 import React, { Component } from 'react';
 import { List, Button, Checkbox, Input, message, Avatar, Badge, Tag, Modal, Menu, Dropdown, Icon, Drawer } from 'antd';
 import Cookies from 'js-cookie';
-import { parse } from 'qs';
 import moment from 'moment';
 import { connect } from 'dva';
-import router from 'umi/router';
-import { ssoLogin } from "@/utils/SSO"
 import styles from './Todo.less';
 import { userToArr, filterbyToString, ordbyToString, timerangeToString } from '@/utils/utils';
 import SysSetting from './SysSetting';
@@ -36,17 +33,9 @@ class Todo extends Component {
   params = {}
 
   componentWillMount() {
-    // 获取ticket
-    const { ticket } = parse(window.location.href.split('?')[1]);
-    if (ticket !== "" && ticket !== undefined) {
-      Cookies.set("sso_ticket", ticket, { expires: 30 });
-      // 删除?ticket
-      router.push("/");
-    }
-
     // 判断是否登录
-    if (Cookies.get("sso_ticket") === "" || Cookies.get("sso_ticket") === undefined || Cookies.get("sso_ticket") === null) {
-      ssoLogin();
+    if (Cookies.get("uid") === "" || Cookies.get("uid") === undefined || Cookies.get("uid") === null) {
+      window.location.href="/login";
     }
   }
 
@@ -58,6 +47,7 @@ class Todo extends Component {
     }).then(() => {
       const uid = Cookies.get("uid");
       if (uid === undefined) {
+        window.location.href="/login";
         return;
       }
       this.params.uid = uid;
