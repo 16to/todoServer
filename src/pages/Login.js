@@ -36,6 +36,7 @@ class Login extends PureComponent {
       {},
       (err, values) => {
         if (err) {
+          this.mobile.focus();
           return;
         }
         dispatch({
@@ -45,16 +46,21 @@ class Login extends PureComponent {
           }
         });
         this.runGetCaptchaCountDown();
+        this.vcode.focus();
       }
     );
 
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  handleSubmit = () => {
     const { form, dispatch } = this.props;
     if (form) {
       form.validateFields((err, values) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        console.log(values);
         dispatch({
           type: 'login/login',
           data: {
@@ -93,7 +99,7 @@ class Login extends PureComponent {
           </div>
 
           <div className={styles.loginBox}>
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
               <Form.Item>
                 {getFieldDecorator("mobile", {
                   rules: [{
@@ -107,7 +113,7 @@ class Login extends PureComponent {
                   validateTrigger: 'onBlur',
 
                 }
-                )(<Input placeholder="手机号" size="large" prefix={<Icon type="mobile" className={styles.prefixIcon} />} />)}
+                )(<Input ref={(c) => { this.mobile = c; }} autoFocus onPressEnter={this.handleSubmit} placeholder="手机号" size="large" prefix={<Icon type="mobile" className={styles.prefixIcon} />} />)}
               </Form.Item>
               <Form.Item>
                 <Row gutter={8}>
@@ -117,7 +123,7 @@ class Login extends PureComponent {
                         required: true,
                         message: "请输入验证码！",
                       }]
-                    })(<Input placeholder='验证码' size="large" prefix={<Icon type="mail" className={styles.prefixIcon} />} />)}
+                    })(<Input ref={(c) => { this.vcode = c; }} onPressEnter={this.handleSubmit} placeholder='验证码' size="large" prefix={<Icon type="mail" className={styles.prefixIcon} />} />)}
                   </Col>
                   <Col span={8}>
                     <Button
@@ -132,7 +138,7 @@ class Login extends PureComponent {
                 </Row>
               </Form.Item>
               <Form.Item>
-                <Button size="large" htmlType="submit" className={styles.submit} type="primary">登录</Button>
+                <Button size="large" onClick={this.handleSubmit} className={styles.submit} type="primary">登录</Button>
               </Form.Item>
             </Form>
           </div>
