@@ -1,5 +1,5 @@
-import request from '@/utils/request';
 import { stringify } from 'qs';
+import request from '@/utils/request';
 
 // 获取todo数据
 export async function getTodo(params) {
@@ -77,6 +77,17 @@ export async function updateTodoSetting(uid,data){
 export async function sendTestApi(data){
   const { ...restParams } = data;
   return request(`/api/sendtest`, {
+    method: 'POST',
+    body: {
+      ...restParams,
+    },
+  });
+}
+
+// 发送验证码
+export async function sendCaptchaApi(data){
+  const { ...restParams } = data;
+  return request(`/api/sendCaptcha`, {
     method: 'POST',
     body: {
       ...restParams,

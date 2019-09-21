@@ -26,7 +26,9 @@
     "qs": "^6.7.0",
     "react": "^16.8.6",
     "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "request-promise": "^4.2.4",
+    "umi": "^2.6.17",
+    "umi-plugin-react": "^1.7.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
@@ -39,8 +41,6 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-markdown": "^1.0.0-beta.6",
     "eslint-plugin-react": "^7.11.1",
-    "mockjs": "^1.0.1-beta3",
-    "umi": "^2.6.17",
-    "umi-plugin-react": "^1.7.6"
+    "mockjs": "^1.0.1-beta3"
   }
 }

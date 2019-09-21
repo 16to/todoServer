@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import { List, Button, Checkbox, Input, message, Avatar, Badge, Tag, Modal, Menu, Dropdown, Icon, Drawer } from 'antd';
 import Cookies from 'js-cookie';
 import { parse } from 'qs';
-import { ssoLogin } from "@/utils/SSO"
 import moment from 'moment';
 import { connect } from 'dva';
 import router from 'umi/router';
+import { ssoLogin } from "@/utils/SSO"
 import styles from './Todo.less';
 import { userToArr, filterbyToString, ordbyToString, timerangeToString } from '@/utils/utils';
 import SysSetting from './SysSetting';

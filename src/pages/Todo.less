@@ -1,173 +1,208 @@
-:global{
-  .ant-list-item{
-    min-height: 48px;;
+:global {
+  .ant-list-item {
+    min-height: 48px;
+    ;
     padding: 6px 0;
   }
-  .ant-tag{
+
+  .ant-tag {
     margin-right: 0;
   }
-  .ant-tooltip{
+
+  .ant-tooltip {
     font-size: 12px;
   }
-  .ant-tooltip-inner{
+
+  .ant-tooltip-inner {
     min-height: 30px;
   }
-  .ant-slider{
+
+  .ant-slider {
     width: 200px;
   }
 }
-.main{
-  height: 100%;
-  min-height: 100vh;
-  width: 100%;
-  background-attachment:fixed;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
+
+.main {
+  height               : 100%;
+  min-height           : 100vh;
+  width                : 100%;
+  background-attachment: fixed;
+  background-position  : center center;
+  background-repeat    : no-repeat;
+  background-size      : cover;
 }
-.content{
-  width: 960px;
+
+.content {
+  width     : 960px;
   min-height: 100vh;
-  padding: 20px;
-  margin: 0 auto;
-  background-color: rgba(255,255,255,0.95);
-  .name{
-    margin-left: 10px;
+  padding   : 20px;
+  margin    : 0 auto;
+
+  .name {
+    margin-left : 10px;
     margin-right: 10px;
-    line-height: 24px;
+    line-height : 24px;
   }
-  .setting{
+
+  .setting {
     line-height: 32px;
-    float: right;
+    float      : right;
     margin-left: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    :hover{
+    cursor     : pointer;
+    font-size  : 16px;
+
+    :hover {
       color: #1890FF;
     }
   }
-  .filterby{
+
+  .filterby {
     line-height: 32px;
-    float: right;
-    cursor: pointer;
-    font-size: 16px;
-    :hover{
+    float      : right;
+    cursor     : pointer;
+    font-size  : 16px;
+
+    :hover {
       color: #1890FF;
     }
   }
-  :global{
-    .ant-tag{
+
+  :global {
+    .ant-tag {
       margin-left: 8px;
     }
   }
-  .userinfo{
+
+  .userinfo {
     margin-bottom: 16px;
   }
-  .add{
+
+  .add {
     margin-bottom: 16px;
   }
-  h2{
-    line-height: 32px;
-    margin-top: 0.5em;
+
+  h2 {
+    line-height  : 32px;
+    margin-top   : 0.5em;
     margin-bottom: 0;
   }
-  .count{
-    float: right;
+
+  .count {
+    float  : right;
     display: block;
-    :global{
-      .ant-badge-count{
-        height: 24px;
-        min-width: 24px;
-        line-height: 24px;
+
+    :global {
+      .ant-badge-count {
+        height       : 24px;
+        min-width    : 24px;
+        line-height  : 24px;
         border-radius: 12px;
-        font-size: 14px;
+        font-size    : 14px;
       }
     }
   }
-  .title{
-    width: 550px;
-    float: left;
+
+  .title {
+    width      : 550px;
+    float      : left;
     line-height: 22px;
-    padding: 0 8px;
-    word-break:break-all;
+    padding    : 0 8px;
+    word-break : break-all;
   }
-  .doneTitle{
+
+  .doneTitle {
     .title;
     color: #999;
   }
-  .doneTag{
+
+  .doneTag {
     color: #999;
   }
-  .del{
-    position: absolute;
-    right: 0;
+
+  .del {
+    position  : absolute;
+    right     : 0;
     margin-top: 1px;
   }
-  .tagBtn{
-    position: absolute;
-    right: 30px;
+
+  .tagBtn {
+    position  : absolute;
+    right     : 30px;
     margin-top: 1px;
   }
-  .notice{
-    position: absolute;
-    right: 60px;
+
+  .notice {
+    position  : absolute;
+    right     : 60px;
     margin-top: 1px;
   }
-  .noticed{
-    position: absolute;
-    right: 60px;
-    margin-top: 1px;
+
+  .noticed {
+    position        : absolute;
+    right           : 60px;
+    margin-top      : 1px;
     background-color: #FFFF00;
   }
-  .time{
-    position: absolute;
-    right: 90px;
-    color: #999;
+
+  .time {
+    position : absolute;
+    right    : 90px;
+    color    : #999;
     font-size: 12px;
   }
-  .doneTime{
-    position: absolute;
-    right: 30px;
-    color: #999;
+
+  .doneTime {
+    position : absolute;
+    right    : 30px;
+    color    : #999;
     font-size: 12px;
   }
-  .eye{
-    margin-left: 8px;
-    font-size: 16px;
+
+  .eye {
+    margin-left   : 8px;
+    font-size     : 16px;
     vertical-align: middle;
-    :hover{
+
+    :hover {
       color: #1890FF;
     }
   }
 }
 
-.setting{
-  position: relative;
+.setting {
+  position  : relative;
   min-height: 100%;
+
   :global {
-    .anticon-setting{
+    .anticon-setting {
       margin-left: 8px;
     }
+
     .ant-list-item {
-      min-height: 42px;
+      min-height   : 42px;
       border-bottom: none;
+
       span {
         flex: 1;
       }
     }
   }
+
   .title {
     margin-bottom: 12px;
-    font-size: 14px;
-    line-height: 22px;
+    font-size    : 14px;
+    line-height  : 22px;
   }
-  .exitBtn{
+
+  .exitBtn {
     margin-bottom: 16px;
   }
-  .defaultBtn{
+
+  .defaultBtn {
     margin-bottom: 16px;
   }
-  .alertTip{
+
+  .alertTip {
     margin-bottom: 16px;
   }
 }

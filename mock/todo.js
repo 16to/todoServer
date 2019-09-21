@@ -183,6 +183,10 @@ function updateTodoSetting(req,res){
   return res.json(setting);
 }
 
+function sendCaptcha(req,res){
+  return res.json({});
+}
+
 export default {
   // 获取todo list
   'GET /api/todo':(req,res)=>getTodo(req,res),
@@ -196,4 +200,6 @@ export default {
   'GET /api/setting':(req,res)=>getTodoSetting(req,res),
   // 更新todo setting
   'PUT /api/setting/:uid':(req,res)=>updateTodoSetting(req,res),
+  // 发送验证码
+  'POST /api/sendCaptcha':(req,res)=>sendCaptcha(req,res),
 };
