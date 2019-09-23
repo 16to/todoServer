@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import moment from 'moment';
 import { connect } from 'dva';
 import styles from './Todo.less';
-import { userToArr, filterbyToString, ordbyToString, timerangeToString } from '@/utils/utils';
+import { filterbyToString, ordbyToString, timerangeToString } from '@/utils/utils';
 import SysSetting from './SysSetting';
 import EditItem from './EditItem';
 import NoticeModal from './NoticeModal';
@@ -35,7 +35,7 @@ class Todo extends Component {
   componentWillMount() {
     // 判断是否登录
     if (Cookies.get("uid") === "" || Cookies.get("uid") === undefined || Cookies.get("uid") === null) {
-      window.location.href="/login";
+      window.location.href = "/login";
     }
   }
 
@@ -43,11 +43,11 @@ class Todo extends Component {
     const { dispatch } = this.props;
     // 获取用户信息
     dispatch({
-      type: 'user/fetchSso',
+      type: 'user/fetchUser',
     }).then(() => {
       const uid = Cookies.get("uid");
       if (uid === undefined) {
-        window.location.href="/login";
+        window.location.href = "/login";
         return;
       }
       this.params.uid = uid;
@@ -211,7 +211,7 @@ class Todo extends Component {
     const data = {
       important: 1,
       sort: 1,
-      top:1
+      top: 1
     }
     dispatch({
       type: 'todo/tag',
@@ -276,10 +276,10 @@ class Todo extends Component {
 
   // 置顶
   handleTop = (id) => {
-    const { dispatch,list } = this.props;
+    const { dispatch, list } = this.props;
     // 查看未完成置顶的数量
-    const topCount = list.filter((item)=>item.top===1 && item.status===0 && item.id !==id);
-    if(topCount.length>=3){
+    const topCount = list.filter((item) => item.top === 1 && item.status === 0 && item.id !== id);
+    if (topCount.length >= 3) {
       message.info('置顶任务超过3个了，请优先完成', 2);
     }
     const data = {
@@ -347,7 +347,7 @@ class Todo extends Component {
         doneData.push(item);
       }
     });
-    doingData.sort((a,b)=>b.top-a.top)
+    doingData.sort((a, b) => b.top - a.top)
     const AddMore = ({ id }) => {
       const itemMenu = (
         <Menu>
@@ -389,7 +389,7 @@ class Todo extends Component {
             </span>
             <span className={styles.time}>{moment(item.addtime).fromNow()}</span>
             <Button className={styles.del} onClick={() => this.delItemConfirm(item.id)} shape="circle" icon="delete" title="删除" size="small" />
-            <AddMore id={item.id}  />
+            <AddMore id={item.id} />
             <Button className={item.noticetype ? styles.noticed : styles.notice} onClick={() => this.showNotice(item)} shape="circle" icon="bell" title="提醒" size="small" />
           </List.Item>
         )}
@@ -418,24 +418,30 @@ class Todo extends Component {
     }) : null;
 
     const opacityStyle = setting.opacity ? ({
-      backgroundColor: `rgba(255,255,255,${setting.opacity/100})`
-    }):null;
+      backgroundColor: `rgba(255,255,255,${setting.opacity / 100})`
+    }) : null;
 
-    const Eye =doneVisible ? (
+    const Eye = doneVisible ? (
       <Icon type="eye" title="隐藏完成" className={styles.eye} onClick={this.hideDone} />
-    ):(
+    ) : (
       <Icon type="eye-invisible" title="显示完成" className={styles.eye} onClick={this.showDone} />
-    );
+      );
     return (
       <div className={styles.main} style={bgStyle}>
         <div className={styles.content} style={opacityStyle}>
           <div className={styles.header}>
             <div className={styles.userinfo}>
-              <Avatar
-                src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/${ssoUser.id}/120`}
-                alt={ssoUser.id}
-              />
-              <span className={styles.name}>{userToArr(ssoUser.title)}</span>
+              {
+                ssoUser && ssoUser.avatar ? (
+                  <Avatar
+                    src={ssoUser.avatar}
+                  />) : (
+                    <Avatar
+                      icon="user"
+                    />
+                  )
+              }
+              <span className={styles.name}>{ssoUser && ssoUser.name?ssoUser.name:"匿名"}</span>
               <span>待办事项</span>
               <span className={styles.setting}>
                 {setting.filterby ? (

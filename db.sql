@@ -22,7 +22,7 @@ CREATE TABLE `list` (
   `updatetime` bigint(20) DEFAULT '0',
   `noticetype` char(20) DEFAULT '' COMMENT '1-短信2-邮件3-espace',
   `noticetime` char(20) DEFAULT '',
-  `noticeagain` tinyint(4)) DEFAULT '0' COMMENT '0-只提醒一次1-每天2-工作日99-自定义',
+  `noticeagain` tinyint(4) DEFAULT '0' COMMENT '0-只提醒一次1-每天2-工作日99-自定义',
   `noticeweek` char(20) DEFAULT '',
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
@@ -44,7 +44,7 @@ CREATE TABLE `jobing` (
   `title` char(200) NOT NULL DEFAULT '',
   `name` char(50) DEFAULT '',
   `email` char(50) DEFAULT '',
-  `phone` char(20) DEFAULT '',
+  `mobile` char(20) DEFAULT '',
   `espace` char(20) DEFAULT '',
   `updatetime` bigint(20) DEFAULT '0',
   `noticetype` char(200) DEFAULT '' COMMENT '1-短信2-邮件3-espace',
@@ -61,7 +61,7 @@ CREATE TABLE `sendlog` (
   `noticetype` char(200) DEFAULT '' COMMENT '1-短信2-邮件3-espace',
   `addtime` bigint(20) DEFAULT '0',
   `email` char(50) DEFAULT '',
-  `phone` char(20) DEFAULT '',
+  `mobile` char(20) DEFAULT '',
   `espace` char(20) DEFAULT '',
   `title` char(200) NOT NULL DEFAULT '',
   `result` char(200) DEFAULT '',
@@ -71,12 +71,12 @@ CREATE TABLE `sendlog` (
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(50) DEFAULT '',
-  `avatar` text DEFAULT '/public/avatar.png',
+  `avatar` char(200) DEFAULT '/public/avatar.png',
   `addtime` bigint(20) DEFAULT '0',
+  `lasttime` bigint(20) DEFAULT '0',
   `email` char(50) DEFAULT '',
-  `phone` char(20) DEFAULT '',
+  `mobile` char(20) DEFAULT '',
   `espace` char(20) DEFAULT '',
-  `title` char(200) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
 
@@ -91,8 +91,8 @@ CREATE TABLE `loginlog` (
 
 CREATE TABLE `vcode` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `vcode` init(10) NOT NULL,
-  `phone` char(20) NOT NULL,
+  `vcode` int(10) NOT NULL,
+  `mobile` char(20) NOT NULL,
   `addtime` bigint(20) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;

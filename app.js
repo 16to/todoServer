@@ -3,31 +3,29 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const bodyparser = require('body-parser');
-const proxy = require('http-proxy-middleware');
+const multer = require("multer");
 const moment = require('moment');
 const Cron = require('cron').CronJob;
 const db = require('./core/db.js');
 const utils = require('./core/utils.js');
 const send = require('./core/send.js');
 
-// sso validate url
-const SSO_VALIDATE_URL = 'http://cloudiam.huawei.com:8080';
-// user info url
-const USER_INFO_URL = 'http://10.93.240.41';
-// upload url
-const UPLOAD_URL = 'http://idfs.inhuawei.com/dfs/upload/sync';
 // node server port
 const PORT = 8002;
 const app = express();
 app.use(bodyparser.json());
 
 const httpServer = http.createServer(app);
+// error code,0-代表正确,1-参数错误
+const errCode={
+  "cc":1,
+}
 // job list
 let jobList = [];
 
 function sendCronInfo(jobData) {
   if (jobData.noticetype.indexOf("1") > -1) {
-    send.Sms(jobData.phone, utils.smsTpl(jobData.name, jobData.title));
+    send.Sms(jobData.mobile, utils.smsTpl(jobData.name, jobData.title));
   }
   if (jobData.noticetype.indexOf("2") > -1) {
     send.Email(jobData.email, "【重要】您有一个代办事项需要处理", utils.emailTpl(jobData.name, jobData.title));
@@ -103,24 +101,87 @@ function initJobing() {
 }
 initJobing();
 
-// set sso proxy
-app.use('/ssoproxy/tokeninfo', proxy({
-  target: SSO_VALIDATE_URL,
-  changeOrigin: true
-}));
 
-// set user info proxy
-app.use('/rest/hw_userinfo', proxy({
-  target: USER_INFO_URL,
-  changeOrigin: true
-}));
+// 验证码
+app.post('/api/captcha', (req, res) => {
+  const insertCon = [];
+  insertCon.vcode = Math.round(Math.random()*(8999))+1000;
+  insertCon.mobile = req.body.mobile;
+  insertCon.addtime = new Date().getTime();
+  db.Insert("vcode", insertCon);
+  res.send({"cc":0});
+});
 
-// set upload info proxy
-app.use('/upload', proxy({
-  target: UPLOAD_URL,
-  pathRewrite: { '^/upload': '' },
-  changeOrigin: true
-}));
+// 登录
+app.post('/api/login', (req, res) => {
+  const con = [];
+  con.mobile = req.body.mobile;
+  con.vcode = req.body.vcode;
+  db.Select("vcode", con, (err, response) => {
+    // 如果没有vcode，就插入一条数据
+    if (response[0] === undefined) {
+      // 验证码错误
+      errCode.cc = 2;
+      res.send(errCode);
+    }
+    else if(response[0].addtime>30*60*1000){
+      // 验证码超时
+      errCode.cc = 3;
+      res.send(errCode);
+    }
+    else {
+      // 插入用户数据中
+      const timestamp = new Date().getTime();
+      const insertCon = {};
+      insertCon.mobile = req.body.mobile;
+      insertCon.name = req.body.mobile;
+      insertCon.addtime = timestamp;
+      insertCon.lasttime = timestamp;
+      db.Insert('user',insertCon,(dberr,dbresponse)=>{
+        if(dberr){
+          res.send(response);
+        }
+        else{
+          // 数据库错误
+          errCode.cc = 99;
+          res.send(dbresponse);
+        }
+      })
+    }
+  });
+});
+
+
+// 获取用户信息
+app.get('/api/user/:uid',(req,res)=>{
+  if(req.params.uid){
+    res.send(errCode);
+    return;
+  }
+  const con = [];
+  con['1'] = 1;
+  con.uid = req.params.uid;
+  db.Select("user", con, (err, response) => {
+    res.send(response[0]);
+  });
+})
+
+// 上传文件
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './upload');    // 保存的路径
+  },
+  filename: (req, file, cb) => {
+    // 将保存文件名设置为 字段名 + 时间戳，比如 logo-1478521468943
+    const suffix = file.mimetype.split('/')[1];// 获取文件格式
+    cb(null, `${file.fieldname}-${Date.now()}.${suffix}`);
+  }
+});
+
+app.post('/api/upload', multer({ storage }).single('file'), (req, res) => {
+  console.log(req.file, '------', req.body, '-------', req.file.path);
+  res.end('ok');
+});
 
 app.get('/api/todo', (req, res) => {
   let sql = `select * from list where 1=1 and uid='${req.query.uid}'`;
@@ -198,8 +259,8 @@ app.put('/api/todo/:id', (req, res) => {
   if (req.body.status !== undefined) {
     datas.status = parseInt(req.body.status, 10);
     datas.addtime = new Date().getTime();
-    if(datas.status===1){
-      req.body.noticetype=[];
+    if (datas.status === 1) {
+      req.body.noticetype = [];
       req.body.lid = parseInt(req.params.id, 10);
     }
   }
@@ -236,14 +297,14 @@ app.put('/api/todo/:id', (req, res) => {
       // 如果noticetype设置为[]，就删除job数据
       deleteJobing(con);
     }
-    else{
+    else {
       const jobData = [];
       jobData.lid = req.body.lid;
       jobData.uid = req.body.uid;
       jobData.title = req.body.title;
       jobData.name = req.body.name;
       jobData.email = req.body.email;
-      jobData.phone = req.body.phone;
+      jobData.mobile = req.body.mobile;
       jobData.espace = req.body.espace;
       jobData.noticetype = req.body.noticetype.join(",");
       jobData.noticetime = moment(req.body.noticetime).format("HH:mm");
@@ -264,7 +325,7 @@ app.put('/api/todo/:id', (req, res) => {
         cronString += ` * * ${jobData.noticeweek}`;// 任意周
       }
       else {
-        const month = parseInt(moment(jobData.noticetime, "HH:mm").format("M"), 10)-1;
+        const month = parseInt(moment(jobData.noticetime, "HH:mm").format("M"), 10) - 1;
         const day = parseInt(moment(jobData.noticetime, "HH:mm").format("D"), 10);
         cronString += ` ${day} ${month} *`;// 就一次需要具体时间
       }
@@ -280,26 +341,26 @@ app.put('/api/todo/:id', (req, res) => {
         }
       });
     }
-    
+
   }
   datas.updatetime = new Date().getTime();
   updateCon.id = parseInt(req.params.id, 10);
   db.Update("list", datas, updateCon);
   // fix bug,没有同步jobing的title
   if (req.body.title !== undefined) {
-    db.Update('jobing',{title:req.body.title},{lid:parseInt(req.params.id, 10)});
+    db.Update('jobing', { title: req.body.title }, { lid: parseInt(req.params.id, 10) });
   }
   res.send([]);
 });
 
-app.get('/api/setting', (req, res) => {
+app.get('/api/setting/:uid', (req, res) => {
   const con = [];
   con['1'] = 1;
-  con.uid = req.query.uid || '16to';
+  con.uid = req.params.uid || '16to';
   db.Select("setting", con, (err, response) => {
     // 如果没有配置，就插入一条数据
     if (response[0] === undefined) {
-      insertDefaultSetting(req.query.uid, res);
+      insertDefaultSetting(req.params.uid, res);
     }
     else {
       res.send(response[0]);
@@ -322,8 +383,8 @@ app.put('/api/setting/:uid', (req, res) => {
   if (req.body.imageurl !== undefined) {
     datas.imageurl = req.body.imageurl;
   }
-  if(req.body.opacity!==undefined){
-    datas.opacity = parseInt(req.body.opacity,10);
+  if (req.body.opacity !== undefined) {
+    datas.opacity = parseInt(req.body.opacity, 10);
   }
   updateCon.uid = req.params.uid;
   db.Update("setting", datas, updateCon);
@@ -336,7 +397,7 @@ app.post('/api/sendtest', (req, res) => {
   if (req.body.noticetype !== undefined) {
     // 短信
     if (req.body.noticetype.indexOf("1") > -1) {
-      sendList.push(send.Sms(req.body.phone, utils.smsTpl(req.body.name, req.body.title)));
+      sendList.push(send.Sms(req.body.mobile, utils.smsTpl(req.body.name, req.body.title)));
     }
     // 邮件
     if (req.body.noticetype.indexOf("2") > -1) {

@@ -1,6 +1,6 @@
 // 引入所有的请求接口
-import { getTodoSetting,updateTodoSetting} from '@/services/todo';
 import Cookies from 'js-cookie';
+import { getTodoSetting,updateTodoSetting} from '@/services/todo';
 
 export default {
   // 空间名称

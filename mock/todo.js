@@ -50,6 +50,15 @@ const setting={
   "timerange":0,
   "imageurl":"",
 };
+const userInfo={
+  id:Mock.Random.id(),
+  name:"16to",
+  avatar:"",
+  email:"",
+  phone:"",
+  addtime:0,
+  lasttime:0,
+}
 
 function sortImportant(a, b)
 {
@@ -164,6 +173,10 @@ function getTodoSetting(req,res){
   return res.json(setting);
 }
 
+function getUser(req,res){
+  return res.json(userInfo);
+}
+
 function updateTodoSetting(req,res){
   if(req.body.filterby!==undefined){
     setting.filterby = parseInt(req.body.filterby,10);
@@ -201,11 +214,13 @@ export default {
   // 添加todo
   'POST /api/todo':(req,res)=>addTodo(req,res),
   // 获取todo setting
-  'GET /api/setting':(req,res)=>getTodoSetting(req,res),
+  'GET /api/setting/:uid':(req,res)=>getTodoSetting(req,res),
   // 更新todo setting
   'PUT /api/setting/:uid':(req,res)=>updateTodoSetting(req,res),
   // 发送验证码
-  'POST /api/sendCaptcha':(req,res)=>sendCaptcha(req,res),
+  'POST /api/captcha':(req,res)=>sendCaptcha(req,res),
    // 登录
   'POST /api/login':(req,res)=>login(req,res),
+  // 获取用户信息
+  'GET /api/user/:uid':(req,res)=>getUser(req,res),
 };

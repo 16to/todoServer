@@ -59,7 +59,7 @@ export async function delTodo(id) {
 
 // 获取配置信息
 export async function getTodoSetting(uid){
-  return request(`/api/setting?uid=${uid}`);
+  return request(`/api/setting/${uid}`);
 }
 
 // 修改配置信息
@@ -87,7 +87,7 @@ export async function sendTestApi(data){
 // 发送验证码
 export async function sendCaptchaApi(data){
   const { ...restParams } = data;
-  return request(`/api/sendCaptcha`, {
+  return request(`/api/captcha`, {
     method: 'POST',
     body: {
       ...restParams,
@@ -95,6 +95,7 @@ export async function sendCaptchaApi(data){
   });
 }
 
+// 登录
 export async function sendLoginApi(data){
   const { ...restParams } = data;
   return request(`/api/login`, {
@@ -103,4 +104,9 @@ export async function sendLoginApi(data){
       ...restParams,
     },
   });
+}
+
+//  获取用户信息
+export async function  getSsoUser(uid){
+  return request(`/api/user/${uid}`);
 }

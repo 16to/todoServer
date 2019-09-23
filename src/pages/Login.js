@@ -99,7 +99,7 @@ class Login extends PureComponent {
 
   // 渲染页面
   render() {
-    const { form: { getFieldDecorator } } = this.props;
+    const { form: { getFieldDecorator },submiting } = this.props;
     const { count } = this.state;
     return (
       <div className={styles.login}>
@@ -151,7 +151,7 @@ class Login extends PureComponent {
                 </Row>
               </Form.Item>
               <Form.Item>
-                <Button size="large" onClick={this.handleSubmit} className={styles.submit} type="primary">登录</Button>
+                <Button size="large" loading={submiting} onClick={this.handleSubmit} className={styles.submit} type="primary">登录</Button>
               </Form.Item>
             </Form>
           </div>

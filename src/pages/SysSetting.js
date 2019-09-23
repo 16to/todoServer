@@ -119,7 +119,7 @@ class Demo extends PureComponent {
     const {setting,ssoUser} = this.props;
     const uploadProps = {
       name: 'attachment',
-      action: '/upload',
+      action: '/api/upload',
       listType: 'picture',
       showUploadList:false,
       headers: {
