@@ -417,6 +417,10 @@ app.post('/api/sendtest', (req, res) => {
 // set dist
 app.use(express.static(path.join(__dirname, './dist')));
 
+app.get('/*',(req,res)=>{
+  res.sendFile(path.join(__dirname, './dist','index.html'));
+})
+
 // bind port
 httpServer.listen(PORT, () => {
   console.log(`http start port:${PORT}`);
