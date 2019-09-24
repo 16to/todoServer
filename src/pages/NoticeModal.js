@@ -1,6 +1,7 @@
 // 引入react和PureComponent
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import Cookies from 'js-cookie';
 import { Modal,Button,Form,Select,Checkbox,TimePicker,Input,message } from 'antd';
 import moment from 'moment';
 import { userToArr } from '@/utils/utils';
@@ -164,7 +165,7 @@ class NoticeModal extends PureComponent {
         <Form layout="horizontal">
           <Form.Item label="uid" style={hiddenLayout}>
             {getFieldDecorator('uid', {
-              initialValue: ssoUser.id,
+              initialValue: Cookies.get("uid"),
             })(
               <Input />
             )}

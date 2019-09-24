@@ -136,7 +136,8 @@ app.post('/api/login', (req, res) => {
   con.vcode = req.body.vcode;
   db.Select("vcode", con, (err, response) => {
     // 如果没有vcode，就插入一条数据
-    if (response[0] === undefined) {
+    console.log(response);
+    if (response[0] === undefined || response === undefined) {
       // 验证码错误
       errCode.cc = 2;
       res.send(errCode);

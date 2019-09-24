@@ -16,6 +16,7 @@ export default {
       const uid = Cookies.get("uid");
       if(uid === undefined || uid === "undefined" || uid === null || uid === 'uid'){
         window.location.href = "/login";
+        return false;
       }
       const response =  yield call(getSsoUser,uid);
       yield put({
