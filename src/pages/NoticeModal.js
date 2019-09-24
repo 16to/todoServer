@@ -150,7 +150,7 @@ class NoticeModal extends PureComponent {
     return (
       <Modal
         title="提醒设置"
-        width={460}
+        width={500}
         visible={noticeVisible}
         maskClosable={false}
         onCancel={handleCancelNotice}
@@ -217,9 +217,14 @@ class NoticeModal extends PureComponent {
               initialValue: noticeValue.noticetype?noticeValue.noticetype.split(","):[],
             })(
               <Checkbox.Group style={{ width: "100%" }}>
+                {/* <Checkbox value="1" disabled={ssoUser.mobile===""}><span title={ssoUser.mobile}>短信</span></Checkbox>
+                <Checkbox value="2" disabled={ssoUser.mail===""}><span title={ssoUser.mail}>邮件</span></Checkbox>
+                <Checkbox value="3" disabled={ssoUser.sAMAccountName===""}><span title={ssoUser.sAMAccountName}>eSpace</span></Checkbox> */}
+                <Checkbox value="4" disabled={ssoUser.mobile===""}><span title={ssoUser.mobile}>Web</span></Checkbox>
+                <Checkbox value="5" disabled={ssoUser.app===""}><span title={ssoUser.mail}>App</span></Checkbox>
+                <Checkbox value="6" disabled={ssoUser.wx===""}><span title={ssoUser.mail}>微信</span></Checkbox>
                 <Checkbox value="1" disabled={ssoUser.mobile===""}><span title={ssoUser.mobile}>短信</span></Checkbox>
                 <Checkbox value="2" disabled={ssoUser.mail===""}><span title={ssoUser.mail}>邮件</span></Checkbox>
-                <Checkbox value="3" disabled={ssoUser.sAMAccountName===""}><span title={ssoUser.sAMAccountName}>eSpace</span></Checkbox>
               </Checkbox.Group>
             )}
           </Form.Item>

@@ -15,21 +15,10 @@ export default {
     }],
   ],
   proxy: {
-    // 登录接口调试
-    '/ssoproxy/tokeninfo':{
-      target:'http://cloudiam.huawei.com:8080',
+    // 接口调试
+    '/api':{
+      target:'http://localhost:8002',
       changeOrigin: true,
-    },
-    // 获取用户信息
-    '/rest/hw_userinfo':{
-      target: "http://10.93.240.41",
-      changeOrigin: true,
-    },
-    // 上传文件
-    '/upload':{
-      target:"http://idfs.inhuawei.com/dfs/upload/sync",
-      pathRewrite:{'^/upload':''},
-      changeOrigin: true
     },
   },
 }

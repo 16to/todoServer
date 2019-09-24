@@ -47,7 +47,7 @@ CREATE TABLE `jobing` (
   `mobile` char(20) DEFAULT '',
   `espace` char(20) DEFAULT '',
   `updatetime` bigint(20) DEFAULT '0',
-  `noticetype` char(200) DEFAULT '' COMMENT '1-短信2-邮件3-espace',
+  `noticetype` char(200) DEFAULT '' COMMENT '1-短信 2-邮件 3-espace 4-Web 5-App 6-微信',
   `noticetime` char(20) DEFAULT '',
   `noticeagain` tinyint(4) DEFAULT '0' COMMENT '0-只提醒一次1-每天2-工作日99-自定义',
   `noticeweek` char(200) DEFAULT '',
@@ -91,7 +91,7 @@ CREATE TABLE `loginlog` (
 
 CREATE TABLE `vcode` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `vcode` int(10) NOT NULL,
+  `vcode` char(10) NOT NULL,
   `mobile` char(20) NOT NULL,
   `addtime` bigint(20) DEFAULT '0',
   PRIMARY KEY (`id`)
