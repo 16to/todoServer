@@ -9,6 +9,7 @@ const Cron = require('cron').CronJob;
 const db = require('./core/db.js');
 const utils = require('./core/utils.js');
 const send = require('./core/send.js');
+const config = require('./core/config');
 
 // node server port
 const PORT = 8002;
@@ -17,8 +18,8 @@ app.use(bodyparser.json());
 
 const httpServer = http.createServer(app);
 // error code,0-代表正确,1-参数错误
-const errCode={
-  "cc":1,
+const errCode = {
+  "cc": 1,
 }
 // job list
 let jobList = [];
@@ -105,12 +106,28 @@ initJobing();
 // 验证码
 app.post('/api/captcha', (req, res) => {
   const insertCon = [];
-  insertCon.vcode = Math.round(Math.random()*(8999))+1000;
+  insertCon.vcode = Math.round(Math.random() * (8999)) + 1000;
   insertCon.mobile = req.body.mobile;
   insertCon.addtime = new Date().getTime();
   db.Insert("vcode", insertCon);
-  res.send({"cc":0});
+  // send.SmsVcode(insertCon.mobile,insertCon.vcode);
+  res.send({ "cc": 0 });
 });
+
+function insertUser(insertCon,res){
+  db.Insert('user', insertCon, (err, response) => {
+    if (err) {
+      // 数据库错误
+      errCode.cc = 99;
+      res.send(response);
+    }
+    else {
+      res.send({
+        uid: utils.encrypt(response.insertId.toString(), config.secret)
+      });
+    }
+  })
+}
 
 // 登录
 app.post('/api/login', (req, res) => {
@@ -124,43 +141,47 @@ app.post('/api/login', (req, res) => {
       errCode.cc = 2;
       res.send(errCode);
     }
-    else if(response[0].addtime>30*60*1000){
+    else if (response[0].addtime < (new Date().getTime() - 30 * 60 * 1000)) {
       // 验证码超时
       errCode.cc = 3;
       res.send(errCode);
     }
     else {
-      // 插入用户数据中
-      const timestamp = new Date().getTime();
-      const insertCon = {};
-      insertCon.mobile = req.body.mobile;
-      insertCon.name = req.body.mobile;
-      insertCon.addtime = timestamp;
-      insertCon.lasttime = timestamp;
-      db.Insert('user',insertCon,(dberr,dbresponse)=>{
-        if(dberr){
-          res.send(response);
+      // 查找用户
+      const usercon = [];
+      usercon.mobile = req.body.mobile;
+      db.Select("user", usercon, (usererr, userresponse) => {
+        // 如果无用户，插入用户数据
+        if (userresponse[0] === undefined) {
+          const timestamp = new Date().getTime();
+          const insertCon = {};
+          insertCon.mobile = req.body.mobile;
+          insertCon.name = utils.hideMobile(req.body.mobile);
+          insertCon.addtime = timestamp;
+          insertCon.lasttime = timestamp;
+          insertUser(insertCon,res);
         }
-        else{
-          // 数据库错误
-          errCode.cc = 99;
-          res.send(dbresponse);
+        else {
+          res.send({
+            uid: utils.encrypt(userresponse[0].id.toString(), config.secret)
+          });
         }
-      })
+      });
     }
   });
 });
 
-
 // 获取用户信息
-app.get('/api/user/:uid',(req,res)=>{
-  if(req.params.uid){
+app.get('/api/user/:uid', (req, res) => {
+  if (!req.params.uid) {
+    errCode.cc =99;
     res.send(errCode);
     return;
   }
+  const uid = parseInt(utils.decrypt(req.params.uid,config.secret),10);
   const con = [];
   con['1'] = 1;
-  con.uid = req.params.uid;
+  con.id = uid;
   db.Select("user", con, (err, response) => {
     res.send(response[0]);
   });
@@ -174,17 +195,20 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     // 将保存文件名设置为 字段名 + 时间戳，比如 logo-1478521468943
     const suffix = file.mimetype.split('/')[1];// 获取文件格式
-    cb(null, `${file.fieldname}-${Date.now()}.${suffix}`);
+    cb(null, `${file.fieldname}-${req.body.uploader}.${suffix}`);
   }
 });
 
-app.post('/api/upload', multer({ storage }).single('file'), (req, res) => {
-  console.log(req.file, '------', req.body, '-------', req.file.path);
-  res.end('ok');
+app.post('/api/upload', multer({ storage }).single('bgimg'), (req, res) => {
+  const suffix = req.file.mimetype.split('/')[1];// 获取文件格式
+  res.send({
+    imageurl:`${req.file.fieldname}-${req.body.uploader}.${suffix}`
+  });
 });
 
 app.get('/api/todo', (req, res) => {
-  let sql = `select * from list where 1=1 and uid='${req.query.uid}'`;
+  const uid = parseInt(utils.decrypt(req.query.uid,config.secret),10);
+  let sql = `select * from list where 1=1 and uid='${uid}'`;
   const filterby = parseInt(req.query.filterby, 10);
   const orderby = parseInt(req.query.orderby, 10);
   const timerange = parseInt(req.query.timerange, 10);
@@ -238,8 +262,9 @@ app.get('/api/todo', (req, res) => {
 
 app.post('/api/todo', (req, res) => {
   const insertCon = [];
+  const uid = parseInt(utils.decrypt(req.body.uid,config.secret),10);
   insertCon.title = req.body.title;
-  insertCon.uid = req.body.uid;
+  insertCon.uid = uid;
   insertCon.status = 0;// 0-未完成 1-完成
   insertCon.addtime = new Date().getTime();
   db.Insert("list", insertCon);
@@ -299,8 +324,9 @@ app.put('/api/todo/:id', (req, res) => {
     }
     else {
       const jobData = [];
+      const uid = parseInt(utils.decrypt(req.body.uid,config.secret),10);
       jobData.lid = req.body.lid;
-      jobData.uid = req.body.uid;
+      jobData.uid = uid;
       jobData.title = req.body.title;
       jobData.name = req.body.name;
       jobData.email = req.body.email;
@@ -354,13 +380,19 @@ app.put('/api/todo/:id', (req, res) => {
 });
 
 app.get('/api/setting/:uid', (req, res) => {
+  if (!req.params.uid) {
+    errCode.cc =99;
+    res.send(errCode);
+    return;
+  }
+  const uid = parseInt(utils.decrypt(req.params.uid,config.secret),10);
   const con = [];
   con['1'] = 1;
-  con.uid = req.params.uid || '16to';
+  con.uid = uid;
   db.Select("setting", con, (err, response) => {
     // 如果没有配置，就插入一条数据
     if (response[0] === undefined) {
-      insertDefaultSetting(req.params.uid, res);
+      insertDefaultSetting(uid, res);
     }
     else {
       res.send(response[0]);
@@ -369,6 +401,12 @@ app.get('/api/setting/:uid', (req, res) => {
 });
 
 app.put('/api/setting/:uid', (req, res) => {
+  if (!req.params.uid) {
+    errCode.cc =99;
+    res.send(errCode);
+    return;
+  }
+  const uid = parseInt(utils.decrypt(req.params.uid,config.secret),10);
   const datas = [];
   const updateCon = [];
   if (req.body.filterby !== undefined) {
@@ -386,7 +424,7 @@ app.put('/api/setting/:uid', (req, res) => {
   if (req.body.opacity !== undefined) {
     datas.opacity = parseInt(req.body.opacity, 10);
   }
-  updateCon.uid = req.params.uid;
+  updateCon.uid = uid;
   db.Update("setting", datas, updateCon);
   res.send([]);
 });
@@ -414,12 +452,17 @@ app.post('/api/sendtest', (req, res) => {
 
 });
 
+// set upload
+app.get('/upload/*', (req, res) => {
+  res.sendFile(path.join(__dirname, req.url));
+});
+
 // set dist
 app.use(express.static(path.join(__dirname, './dist')));
 
-app.get('/*',(req,res)=>{
-  res.sendFile(path.join(__dirname, './dist','index.html'));
-})
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, './dist', 'index.html'));
+});
 
 // bind port
 httpServer.listen(PORT, () => {

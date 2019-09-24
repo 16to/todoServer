@@ -1,4 +1,5 @@
 const  moment = require('moment');
+const crypto = require('crypto'); 
 
 function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -57,6 +58,31 @@ function espaceTpl(name,title){
   return `尊敬的${name}：\n您有一个代办事项需要处理：${title}。\n详情请登录http://todo.inhuawei.com。`
 }
 
+// 加密
+function encrypt(str,secret){
+  const cipher = crypto.createCipher('aes192', secret);
+  let enc = cipher.update(str, 'utf8', 'hex');// 编码方式从utf-8转为hex;
+  enc += cipher.final('hex');// 编码方式从转为hex;
+  return enc;
+}
+
+// 解密
+function decrypt(str,secret){
+  const decipher = crypto.createDecipher('aes192', secret);
+  let dec = decipher.update(str, 'hex', 'utf8');// 编码方式从hex转为utf-8;
+  dec += decipher.final('utf8');// 编码方式从utf-8;
+  return dec;
+}
+
+// 隐藏手机号
+function hideMobile(mobile){
+  const reg = /^(\d{3})\d{4}(\d{4})$/
+  return mobile.replace(reg,'$1***$2');
+}
+
+exports.encrypt = encrypt;
+exports.decrypt = decrypt;
+exports.hideMobile = hideMobile;
 exports.getTimeDistance = getTimeDistance;
 exports.emailTpl = emailTpl;
 exports.smsTpl = smsTpl;

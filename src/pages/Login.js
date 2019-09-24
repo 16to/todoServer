@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import Cookies from 'js-cookie';
 import router from 'umi/router';
-import { Button, Input, Row, Col, Form, Icon } from 'antd';
+import { Button, Input, Row, Col, Form, Icon,message } from 'antd';
 
 import styles from './Login.less';
 
@@ -77,7 +77,19 @@ class Login extends PureComponent {
           }
         }).then((res)=>{
           if(res){
-            Cookies.set("uid", values.mobile);
+            if(res.cc===2){
+              message.error("验证码错误");
+              return;
+            }
+            if(res.cc===3){
+              message.error("验证码已过期，请重新获取");
+              return;
+            }
+            if(res.cc===99){
+              message.error(res);
+              return;
+            }
+            Cookies.set("uid", res.uid);
             router.push("/");
           }
         })

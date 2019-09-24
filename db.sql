@@ -71,7 +71,7 @@ CREATE TABLE `sendlog` (
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(50) DEFAULT '',
-  `avatar` char(200) DEFAULT '/public/avatar.png',
+  `avatar` char(200) DEFAULT '',
   `addtime` bigint(20) DEFAULT '0',
   `lasttime` bigint(20) DEFAULT '0',
   `email` char(50) DEFAULT '',

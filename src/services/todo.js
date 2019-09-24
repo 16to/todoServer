@@ -3,7 +3,7 @@ import request from '@/utils/request';
 
 // 获取todo数据
 export async function getTodo(params) {
-  return request(`/api/todo?${stringify(params)}`);
+  return request(`/api/todo/?${stringify(params)}`);
 }
 
 // 新增todo数据

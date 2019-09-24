@@ -49,7 +49,7 @@ class Demo extends PureComponent {
     if (info.file.status === 'done') {
       message.success(`${info.file.name} 上传成功`);
       this.setState({ loading: false });
-      this.changeSetting("imageurl",`http://idfs.inhuawei.com/dfs/download/${info.file.response.data.space}/${info.file.response.data.filename}`);
+      this.changeSetting("imageurl",`/upload/${info.file.response.imageurl}`);
     } 
     else if (info.file.status === 'error') {
       message.error(`${info.file.name} 上传失败`);
@@ -118,14 +118,14 @@ class Demo extends PureComponent {
     const {loading,opacity} =  this.state;
     const {setting,ssoUser} = this.props;
     const uploadProps = {
-      name: 'attachment',
+      name: 'bgimg',
       action: '/api/upload',
       listType: 'picture',
       showUploadList:false,
       headers: {
         authorization: 'authorization-text',
       },
-      data:{ "type": 1, "uploader": ssoUser.id, "space":`todo_${ssoUser.id}`, "torrentStatus": 0, "override": true },
+      data:{ "uploader": ssoUser.id, "override": true },
       beforeUpload:this.beforeUpload,
       onChange:this.uploadOnChange
     };

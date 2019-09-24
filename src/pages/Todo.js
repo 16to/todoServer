@@ -441,7 +441,7 @@ class Todo extends Component {
                     />
                   )
               }
-              <span className={styles.name}>{ssoUser && ssoUser.name?ssoUser.name:"匿名"}</span>
+              <span className={styles.name}>{ssoUser && ssoUser.name ? ssoUser.name : "匿名"}</span>
               <span>待办事项</span>
               <span className={styles.setting}>
                 {setting.filterby ? (

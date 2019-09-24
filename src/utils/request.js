@@ -1,6 +1,7 @@
 import fetch from 'dva/fetch';
 import { notification } from 'antd';
 import router from 'umi/router';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import hash from 'hash.js';
 
 const codeMessage = {

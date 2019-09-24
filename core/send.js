@@ -7,7 +7,7 @@
 
 const  yunpianSMS =  require('yunpian-sdk');
 
-const config = require("./sendConfig");
+const config = require("./config");
 
 const yunpian = new yunpianSMS.SMS({
   apikey: config.apikey
@@ -30,7 +30,9 @@ const SmsTitle = (phone,name,content,callback) => {
     mobile: phone,
     text: `【16to】尊敬的${name}，您有一个代办事项需要处理：${content}`
   }).then((res)=>{
-    callback(res);
+    if(callback){
+      callback(res);
+    }
   })
 }
 
