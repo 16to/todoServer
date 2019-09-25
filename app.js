@@ -110,7 +110,7 @@ app.post('/api/captcha', (req, res) => {
   insertCon.mobile = req.body.mobile;
   insertCon.addtime = new Date().getTime();
   db.Insert("vcode", insertCon);
-  // send.SmsVcode(insertCon.mobile,insertCon.vcode);
+  send.SmsVcode(insertCon.mobile,insertCon.vcode);
   res.send({ "cc": 0 });
 });
 
