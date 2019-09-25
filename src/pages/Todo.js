@@ -390,7 +390,7 @@ class Todo extends Component {
             <span className={styles.time}>{moment(item.addtime).fromNow()}</span>
             <Button className={styles.del} onClick={() => this.delItemConfirm(item.id)} shape="circle" icon="delete" title="删除" size="small" />
             <AddMore id={item.id} />
-            <Button className={item.noticetype ? styles.noticed : styles.notice} onClick={() => this.showNotice(item)} shape="circle" icon="bell" title="提醒" size="small" />
+            <Button disabled className={item.noticetype ? styles.noticed : styles.notice} onClick={() => this.showNotice(item)} shape="circle" icon="bell" title="提醒，移动端支持中" size="small" />
           </List.Item>
         )}
       />

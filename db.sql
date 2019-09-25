@@ -84,7 +84,7 @@ CREATE TABLE `loginlog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `account` char(20) NOT NULL,
   `addtime` bigint(20) DEFAULT '0',
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-手机登录;1-第三方登录',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-手机号登录;1-第三方登录',
   `loginip` varchar(15) NOT NULL DEFAULT '127.0.0.1',
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;

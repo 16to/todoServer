@@ -114,6 +114,7 @@ app.post('/api/captcha', (req, res) => {
   res.send({ "cc": 0 });
 });
 
+// 添加用户
 function insertUser(insertCon,res){
   db.Insert('user', insertCon, (err, response) => {
     if (err) {
@@ -129,6 +130,16 @@ function insertUser(insertCon,res){
   })
 }
 
+// 添加登录日志
+function insertLog(account,type,ip){
+  const insertCon = [];
+  insertCon.account = account;
+  insertCon.type = type;
+  insertCon.addtime = new Date().getTime();
+  insertCon.loginip = ip;
+  db.Insert('loginlog', insertCon);
+}
+
 // 登录
 app.post('/api/login', (req, res) => {
   const con = [];
@@ -136,7 +147,6 @@ app.post('/api/login', (req, res) => {
   con.vcode = req.body.vcode;
   db.Select("vcode", con, (err, response) => {
     // 如果没有vcode，就插入一条数据
-    console.log(response);
     if (response === undefined || response[0] === undefined) {
       // 验证码错误
       errCode.cc = 2;
@@ -152,6 +162,7 @@ app.post('/api/login', (req, res) => {
       const usercon = [];
       usercon.mobile = req.body.mobile;
       db.Select("user", usercon, (usererr, userresponse) => {
+        insertLog(req.body.mobile,0,utils.getClientIp(req));
         // 如果无用户，插入用户数据
         if (userresponse[0] === undefined) {
           const timestamp = new Date().getTime();

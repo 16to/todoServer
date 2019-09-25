@@ -150,7 +150,7 @@ class NoticeModal extends PureComponent {
     return (
       <Modal
         title="提醒设置"
-        width={500}
+        width={560}
         visible={noticeVisible}
         maskClosable={false}
         onCancel={handleCancelNotice}

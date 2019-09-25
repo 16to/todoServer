@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "umi dev",
+    "proxy": "cross-env MOCK=none umi dev",
     "build": "umi build"
   },
   "author": "16to",
@@ -34,6 +35,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
+    "cross-env": "^6.0.0",
     "eslint": "^5.12.0",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-config-prettier": "^3.0.1",

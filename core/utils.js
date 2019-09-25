@@ -80,6 +80,15 @@ function hideMobile(mobile){
   return mobile.replace(reg,'$1***$2');
 }
 
+// 获取客户端ip地址
+function getClientIp(req) {
+  return req.headers['x-forwarded-for'] ||
+  req.connection.remoteAddress ||
+  req.socket.remoteAddress ||
+  req.connection.socket.remoteAddress;
+};
+
+exports.getClientIp = getClientIp;
 exports.encrypt = encrypt;
 exports.decrypt = decrypt;
 exports.hideMobile = hideMobile;
