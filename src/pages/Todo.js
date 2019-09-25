@@ -335,6 +335,10 @@ class Todo extends Component {
   }
 
   render() {
+    const uid = Cookies.get("uid");
+    if(uid === "" || uid === undefined){
+      return null
+    }
     const { loading, list, ssoUser, setting } = this.props;
     const { addValue, settingVisible, noticeVisible, noticeValue, doneVisible } = this.state;
     const doingData = [];
