@@ -89,7 +89,7 @@ class Login extends PureComponent {
               message.error(res);
               return;
             }
-            Cookies.set("uid", res.uid);
+            Cookies.set("uid", res.uid,{ expires: 365 });
             router.push("/");
           }
         })

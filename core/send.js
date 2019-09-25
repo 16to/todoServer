@@ -20,7 +20,9 @@ const SmsVcode = (phone,vcode,callback) => {
     mobile: phone,
     text: `【16to】正在进行登录操作，您的验证码为${vcode}`
   }).then((res)=>{
-    callback(res);
+    if(callback){
+      callback(res);
+    }
   })
 }
 
