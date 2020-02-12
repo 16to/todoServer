@@ -5,6 +5,7 @@ const path = require('path');
 const bodyparser = require('body-parser');
 const multer = require("multer");
 const moment = require('moment');
+const compression = require('compression');
 const Cron = require('cron').CronJob;
 const db = require('./core/db.js');
 const utils = require('./core/utils.js');
@@ -14,6 +15,7 @@ const config = require('./core/config');
 // node server port
 const PORT = 8002;
 const app = express();
+app.use(compression());
 app.use(bodyparser.json());
 
 const httpServer = http.createServer(app);

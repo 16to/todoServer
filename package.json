@@ -4,6 +4,7 @@
   "description": "luban-portal-server",
   "main": "app.js",
   "scripts": {
+    "analyze": "cross-env ANALYZE=1 umi build",
     "start": "umi dev",
     "proxy": "cross-env MOCK=none umi dev",
     "build": "umi build"
@@ -14,6 +15,7 @@
     "antd": "^3.19.5",
     "body-parse": "^0.1.0",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "cron": "^1.7.1",
     "dva": "^2.4.1",
     "express": "^4.16.4",
