@@ -1,5 +1,5 @@
 // 引入所有的请求接口
-import { sendCaptchaApi,sendLoginApi } from '@/services/todo';
+import { sendCaptchaApi,sendLoginApi } from '../services/todo';
 
 export default {
   // 空间名称
