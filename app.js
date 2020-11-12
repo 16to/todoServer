@@ -13,7 +13,7 @@ const send = require('./core/send.js');
 const config = require('./core/config');
 
 // node server port
-const PORT = 8002;
+const PORT = 3004;
 const app = express();
 app.use(compression());
 app.use(bodyparser.json());
