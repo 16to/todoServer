@@ -20,7 +20,7 @@
     "dva": "^2.4.1",
     "express": "^4.16.4",
     "http": "0.0.0",
-    "http-proxy-middleware": "^0.19.1",
+    "http-proxy-middleware": "^3.0.3",
     "js-cookie": "^2.2.0",
     "js-sha1": "^0.6.0",
     "moment": "^2.24.0",
@@ -31,7 +31,7 @@
     "react": "^16.8.6",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "umi": "^2.6.17",
+    "umi": "^4.3.28",
     "umi-plugin-react": "^1.7.6",
     "yunpian-sdk": "^1.0.0"
   },
